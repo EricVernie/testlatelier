@@ -24,6 +24,7 @@ if (app.Environment.IsDevelopment())
 //Crée un endpoint qui retourne les joueurs. La liste doit être triée du meilleur au moins bon.
 
 //TODO : AJouter attribut authorisation
+
 app.MapGet("/Players", async (ServicePlayers servicePlayers ) =>
 {
     var RootObject = await servicePlayers.GetPlayersAsync();
@@ -46,6 +47,17 @@ app.MapGet("/Players/{id}", async (string id, ServicePlayers servicePlayers) =>
 .WithOpenApi();
 
 // Crée un endpoint qui retourne les statistiques des joueurs.
+
+/// <summary>
+/// Returns statistical data about players, including:
+/// - Country with the best win ratio
+/// - Average BMI of all players
+/// - Median height of players
+/// </summary>
+/// <remarks>
+/// The statistics are calculated based on all available player data.
+/// </remarks>
+/// <response code="200">Returns the calculated statistics</response>
 app.MapGet("/Players/Statistics", async (ServicePlayers servicePlayers) =>
 {
     var RootObject = await servicePlayers.GetPlayersAsync();
