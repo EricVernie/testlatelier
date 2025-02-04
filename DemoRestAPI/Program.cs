@@ -1,9 +1,15 @@
+using Microsoft.AspNetCore.Http.HttpResults;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+// Register HttpClient
+builder.Services.AddHttpClient();
+builder.Services.AddTransient<ServicePlayers>();
+
 
 var app = builder.Build();
 
@@ -15,16 +21,14 @@ if (app.Environment.IsDevelopment())
 }
 
 //Crée un endpoint qui retourne les joueurs. La liste doit être triée du meilleur au moins bon.
-var joueurs = new List<Joueur>
-{
-    new Joueur { Nom = "Joueur1", Score = 100 },
-    new Joueur { Nom = "Joueur2", Score = 200 },
-    new Joueur { Nom = "Joueur3", Score = 150 }
-};
 
-app.MapGet("/joueurs", () =>
+app.MapGet("/Players", async (ServicePlayers servicePlayers ) =>
 {
-    return joueurs.OrderByDescending(j => j.Score);
+    var Players = await servicePlayers.GetPlayerAsync();
+    
+
+    return Results.Ok(Players.players.OrderBy (p => p.data.rank));
+    
 })
 .WithName("GetJoueurs")
 .WithOpenApi();
@@ -36,8 +40,3 @@ app.MapGet("/joueurs", () =>
 app.Run();
 
 
-internal record Joueur
-{
-    public string Nom { get; set; }
-    public int Score { get; set; }
-};
