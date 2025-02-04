@@ -6,6 +6,8 @@ Pour tester l'API, vous pouvez utiliser des outils comme `curl`, `Postman` ou `h
 
 L'API est déployée dans le cloud à l'adresse suivante
 https://winapi2025.azurewebsites.net/
+
+
 Un swagger est disponible pour tester les endpoints
 https://winapi2025.azurewebsites.net/swagger
 
