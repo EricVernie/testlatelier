@@ -14,31 +14,30 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
-var summaries = new[]
+//Crée un endpoint qui retourne les joueurs. La liste doit être triée du meilleur au moins bon.
+var joueurs = new List<Joueur>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+    new Joueur { Nom = "Joueur1", Score = 100 },
+    new Joueur { Nom = "Joueur2", Score = 200 },
+    new Joueur { Nom = "Joueur3", Score = 150 }
 };
 
-app.MapGet("/weatherforecast", () =>
+app.MapGet("/joueurs", () =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    return joueurs.OrderByDescending(j => j.Score);
 })
-.WithName("GetWeatherForecast")
+.WithName("GetJoueurs")
 .WithOpenApi();
+
+//app.UseHttpsRedirection();
+
+
 
 app.Run();
 
-internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+
+internal record Joueur
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+    public string Nom { get; set; }
+    public int Score { get; set; }
+};
